@@ -25,18 +25,22 @@ public class FlightAviationApp {
 
         logger.info("Начало обработки файла: {}", inputPath.getFileName());
 
+        String[] arr;
+        LocalDateTime arrivalTime;
+        String flightNumber;
+        int delay;
         try (BufferedReader reader = Files.newBufferedReader(inputPath, StandardCharsets.UTF_8);
              BufferedWriter writer = Files.newBufferedWriter(outpuPath, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 try {
                     // 1.Разделяем строку (формат: Дата;Номер;Откуда;Куда;Задержка)
-                    String[] arr = line.split(";");
+                    arr = line.split(";");
                     if(arr.length < 5) { throw new InvalidFlightDataException("Недостаточно данных в строке"); } 
                     
-                    LocalDateTime arrivalTime = LocalDateTime.parse(arr[0]);
-                    String flightNumber = arr[1];
-                    int delay = Integer.parseInt(arr[4]); // если не сможет парсить кидает NumberFormatException
+                    arrivalTime = LocalDateTime.parse(arr[0]);
+                    flightNumber = arr[1];
+                    delay = Integer.parseInt(arr[4]); // если не сможет парсить кидает NumberFormatException
                     
                     // 2.Логика задержки
                     if(delay > 60) {
@@ -61,5 +65,18 @@ public class FlightAviationApp {
             logger.error("Критическая ошибка ввода-вывода", e);
         }
         logger.info("Обработка завершена.");
+
+        System.out.println("------t------------t---------");
+
+        PassengerFlight pf = new PassengerFlight("LH-400", "London", "Paris", LocalDateTime.parse("2023-10-25T12:00"), 130, 10);
+        CargoFlight cf = new CargoFlight("Ll-400", "London", "Paris", LocalDateTime.parse("2023-10-25T12:00"), 130, 10);
+        Flight[] flights = new Flight[]{pf, cf};
+
+        for(Flight flight:flights) {
+            flight.printInfo(); // Вызовет общую логику из родителя
+            double priority = flight.calculatePriority(); // Вызовет разную логику (Полиморфизм!)
+            System.out.println("Приоритет обслуживания: " + priority);
+            System.out.println("---------------------------");
+        }
     }
 }
