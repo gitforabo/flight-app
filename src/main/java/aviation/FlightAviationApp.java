@@ -25,23 +25,31 @@ public class FlightAviationApp {
 
         logger.info("Начало обработки файла: {}", inputPath.getFileName());
 
-        String[] arr;
-        LocalDateTime arrivalTime;
-        String flightNumber;
-        int delay;
+        FlightManager<Flight> manager = new FlightManager<>();
+
         try (BufferedReader reader = Files.newBufferedReader(inputPath, StandardCharsets.UTF_8);
              BufferedWriter writer = Files.newBufferedWriter(outpuPath, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 try {
                     // 1.Разделяем строку (формат: Дата;Номер;Откуда;Куда;Задержка)
-                    arr = line.split(";");
+                    String[] arr = line.split(";");
                     if(arr.length < 5) { throw new InvalidFlightDataException("Недостаточно данных в строке"); } 
                     
-                    arrivalTime = LocalDateTime.parse(arr[0]);
-                    flightNumber = arr[1];
-                    delay = Integer.parseInt(arr[4]); // если не сможет парсить кидает NumberFormatException
+                    String flightNumber = arr[1];
+                    LocalDateTime arrivalTime = LocalDateTime.parse(arr[0]);
+                    String departureСity = arr[2];
+                    String arrivalCity = arr[3];
+                    int delay = Integer.parseInt(arr[4]); // если не сможет парсить кидает NumberFormatException
                     
+                    if (flightNumber.contains("CF")) {
+                        CargoFlight cf = new CargoFlight(flightNumber, departureСity, arrivalCity, arrivalTime, delay, 30);
+                        manager.addFlight(cf);
+                    } else {
+                        PassengerFlight pf = new PassengerFlight(flightNumber, departureСity, arrivalCity, arrivalTime, delay, 300);
+                        manager.addFlight(pf);
+                    }
+
                     // 2.Логика задержки
                     if(delay > 60) {
                         logger.warn("Рейс {} задержан на {} минут", flightNumber, delay);
@@ -68,15 +76,11 @@ public class FlightAviationApp {
 
         System.out.println("------t------------t---------");
 
-        PassengerFlight pf = new PassengerFlight("LH-400", "London", "Paris", LocalDateTime.parse("2023-10-25T12:00"), 130, 10);
-        CargoFlight cf = new CargoFlight("Ll-400", "London", "Paris", LocalDateTime.parse("2023-10-25T12:00"), 130, 10);
-        Flight[] flights = new Flight[]{pf, cf};
+        System.out.println("Всего записей: " + manager.flightList.size());
+        System.out.println("Уникальных рейсов: " + manager.uniqueFlights.size());
 
-        for(Flight flight:flights) {
-            flight.printInfo(); // Вызовет общую логику из родителя
-            double priority = flight.calculatePriority(); // Вызовет разную логику (Полиморфизм!)
-            System.out.println("Приоритет обслуживания: " + priority);
-            System.out.println("---------------------------");
-        }
+        System.out.println("------t------------t---------");
+
+        manager.flightList.forEach(Flight :: printInfo);
     }
 }

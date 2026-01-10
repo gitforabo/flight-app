@@ -1,6 +1,7 @@
 package aviation;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public abstract class Flight {
     private String flightNumber;
@@ -24,10 +25,27 @@ public abstract class Flight {
                 flightNumber, departureCity, arrivalCity, delay);
     }
 
+    public String getFlightNumber() {
+        return flightNumber;
+    }
     public int getDelay() {
         return delay;
     }
     public void setDelay(int delay) {
         this.delay = delay;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true; // Одна ссылка
+        if (o == null || getClass() != o.getClass()) return false;
+        
+        Flight flight = (Flight) o;
+        return Objects.equals(arrivalTime, flight.arrivalTime) && Objects.equals(flightNumber, flight.flightNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(flightNumber, arrivalTime);
     }
 }
