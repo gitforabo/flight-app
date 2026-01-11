@@ -1,11 +1,11 @@
 package aviation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class FlightManager<T extends Flight> { // T — это любой класс, который наследуется от Flight
     List<T> flightList = new ArrayList<>();
@@ -27,13 +27,8 @@ public class FlightManager<T extends Flight> { // T — это любой кла
     }
 
     public Map<String, T> getFlightMap() {
-        Map<String, T> flightMap = new HashMap<>();
-        for (T flight : flightList) {
-            // Ключ — номер рейса, значение — сам объект
-            flightMap.put(flight.getFlightNumber(), flight);
-        }
-        return flightMap;
-    }
+        return flightList.stream().collect(Collectors.toMap(Flight :: getFlightNumber, f -> f, (existing, replacement) -> existing));
+    } // Flight::getFlightNumber тоже самое f -> f.getFlightNumber() / (a, b) -> a при дубликатах ключей оставить старый.
 
     public void addAllFlights(List<? extends T> newFlights) { // Wildcard (? extends) — в параметрах метода принимают список T или его наследников
         // List<? extends Flight> ← List<PassengerFlight>. А так как: PassengerFlight extends Flight

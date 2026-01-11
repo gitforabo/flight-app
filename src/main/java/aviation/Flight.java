@@ -35,6 +35,10 @@ public abstract class Flight {
         this.delay = delay;
     }
 
+    public String getArrivalCity() {
+        return arrivalCity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true; // Одна ссылка

@@ -10,6 +10,11 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +85,36 @@ public class FlightAviationApp {
         System.out.println("Уникальных рейсов: " + manager.uniqueFlights.size());
 
         System.out.println("------t------------t---------");
-
+        
         manager.flightList.forEach(Flight :: printInfo);
+        
+        System.out.println("\n=== АНАЛИТИКА ПОТОКОВ ===");
+
+        // 1. Фильтрация: Только грузовые рейсы с задержкой
+        manager.flightList.stream()
+            .filter(f -> f instanceof CargoFlight)
+            .filter(f -> f.getDelay() > 0)
+            .forEach(f -> f.printInfo());
+
+        // 2. Агрегация: Суммарная задержка пассажирских рейсов
+        int totalPassengerDelay = manager.flightList.stream()
+            .filter(f -> f instanceof PassengerFlight)
+            .mapToInt(f -> f.getDelay())
+            .sum();
+            System.out.println("Общая задержка пассажиров: " + totalPassengerDelay + " мин.");
+
+        // 3. Optional: Поиск самого приоритетного рейса
+        Optional<Flight> opt = manager.flightList.stream()  // Контейнер для значения, которое может отсутствовать
+            .max(Comparator.comparingDouble(Flight::calculatePriority));
+        // Эквивалент (f1, f2) -> Double.compare(f1.calculatePriority(), f2.calculatePriority())
+        opt.ifPresent(f -> System.out.println("Самый приоритетный рейс: " + f.getFlightNumber()));
+        // stream → max по приоритету → Optional → если есть → вывести номер
+
+        // 4. Группировка: Рейсы по городам прибытия
+        Map<String, List<Flight>> cityGroups = manager.flightList.stream()
+            .collect(Collectors.groupingBy(Flight::getArrivalCity));
+
+        cityGroups.forEach((city, list) -> 
+            System.out.println("В город " + city + " летит рейсов: " + list.size()));
     }
 }
