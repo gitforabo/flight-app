@@ -20,6 +20,6 @@ public class PassengerFlight extends Flight implements Delayable {
 
     @Override
     public void reportDelay(int minutes) {
-        setDelay(getDelay() + minutes); // Обновляем задержку через сеттер родителя
+        addDelay(getDelay() + minutes); // Обновляем задержку через сеттер родителя
     }
 }

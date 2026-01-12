@@ -8,7 +8,7 @@ public abstract class Flight {
     private String departureCity;
     private String arrivalCity;
     private LocalDateTime arrivalTime;
-    private int delay;
+    private volatile int delay;
 
     public Flight(String flightNumber, String departureCity, String arrivalCity, LocalDateTime arrivalTime, int delay) {
         this.flightNumber = flightNumber;
@@ -31,9 +31,13 @@ public abstract class Flight {
     public int getDelay() {
         return delay;
     }
-    public void setDelay(int delay) {
-        this.delay = delay;
+    // Добавляем synchronized, чтобы только один поток мог менять задержку
+    public synchronized void addDelay(int delay) {
+        this.delay += delay;
     }
+    // public void setDelay(int delay) {
+    //     this.delay += delay;
+    // }
 
     public String getArrivalCity() {
         return arrivalCity;

@@ -14,6 +14,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -116,5 +119,41 @@ public class FlightAviationApp {
 
         cityGroups.forEach((city, list) -> 
             System.out.println("В город " + city + " летит рейсов: " + list.size()));
+
+        // 1. Создаем пул потоков из 3 потоков. Потоки переиспользуются
+        ExecutorService executor = Executors.newFixedThreadPool(3); // Задачи (Runnable) не создают новые потоки каждый раз
+
+        // 2. Берем какой-нибудь рейс из менеджера
+        Flight testFlight = manager.flightList.get(0);
+
+        System.out.println("Начальная задержка рейса " + testFlight.getFlightNumber() + ": " + testFlight.getDelay());
+
+        // 3. Отправляем 5 параллельных задач на обновление задержки
+        for (int i = 0; i < 5; i++) {
+            executor.submit(() -> {  // submit — положить задачу в очередь. () -> { } — это Runnable
+                System.out.println("Поток " + Thread.currentThread().getName() + " обновляет данные...");
+                testFlight.addDelay(10); // Каждый поток добавляет 10 минут
+            });
+        }
+
+        // 4. Корректно завершаем работу
+        //executor.shutdown(); // Завершение пула, доделает текущий задач
+        try { // Ожидание завершения
+            executor.awaitTermination(5, TimeUnit.SECONDS); // Главный поток ждёт до 5 секунд пока все задачи не закончатся
+        } catch (InterruptedException e) { 
+            e.printStackTrace();
+        }
+
+        System.out.println("Итоговая задержка после работы всех потоков: " + testFlight.getDelay());
+
+        Thread monitoringThread = new Thread(() -> {
+            try { 
+                System.out.println("Поток monitoring " + Thread.currentThread().getName());
+                Thread.sleep(2000); 
+            } catch (InterruptedException e) {}
+        });
+        System.out.println("Статус до старта: " + monitoringThread.getState() + " Поток " + Thread.currentThread().getName());
+        monitoringThread.start(); 
+        System.out.println("Статус после старта: " + monitoringThread.getState() + " Поток " + Thread.currentThread().getName());
     }
 }

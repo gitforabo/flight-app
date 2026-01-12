@@ -1,19 +1,23 @@
 package aviation;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 public class FlightManager<T extends Flight> { // T — это любой класс, который наследуется от Flight
-    List<T> flightList = new ArrayList<>();
-    Set<T> uniqueFlights = new HashSet<>();
+    // Вместо ArrayList используем CopyOnWriteArrayList (безопасен для чтения)
+    protected List<T> flightList = new CopyOnWriteArrayList<>();
+    
+    // Вместо HashSet используем ConcurrentHashMap.newKeySet()
+    protected Set<T> uniqueFlights = ConcurrentHashMap.newKeySet();
 
-    public void addFlight(T flight) {
+    public synchronized void addFlight(T flight) {
         flightList.add(flight);
-        uniqueFlights.add(flight); // Если дубликат (по equals/hashCode), Set его не добавит
+        uniqueFlights.add(flight);
     }
 
     public List<T> getFlightsSortedByPriority() {
