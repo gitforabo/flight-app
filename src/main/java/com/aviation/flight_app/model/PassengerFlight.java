@@ -1,10 +1,18 @@
-package aviation;
+package com.aviation.flight_app.model;
 
 import java.time.LocalDateTime;
 
-public class PassengerFlight extends Flight implements Delayable {
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+
+@Entity
+@DiscriminatorValue("PASSENGER")
+public class PassengerFlight extends Flight {
 
     private int passengerCount;
+
+    public PassengerFlight() {}
 
     public PassengerFlight(String flightNumber, String departureСity, String arrivalCity, LocalDateTime arrivalTime,
             int delay, int passengerCount) {
@@ -18,8 +26,8 @@ public class PassengerFlight extends Flight implements Delayable {
         return passengerCount * getDelay(); 
     }
 
-    @Override
-    public void reportDelay(int minutes) {
-        addDelay(getDelay() + minutes); // Обновляем задержку через сеттер родителя
-    }
+    // @Override
+    // public void reportDelay(int minutes) {
+    //     addDelay(getDelay() + minutes); // Обновляем задержку через сеттер родителя
+    // }
 }

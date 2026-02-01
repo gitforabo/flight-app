@@ -1,4 +1,4 @@
-package aviation;
+package com.aviation.flight_app;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
+
+import com.aviation.flight_app.model.Flight;
 
 public class FlightManager<T extends Flight> { // T — это любой класс, который наследуется от Flight
     // Вместо ArrayList используем CopyOnWriteArrayList (безопасен для чтения)

@@ -1,9 +1,16 @@
-package aviation;
+package com.aviation.flight_app.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("CARGO")
 public class CargoFlight extends Flight {
     private double cargoWeight;
+
+    public CargoFlight() {}
 
     public CargoFlight(String flightNumber, String departureСity, String arrivalCity, LocalDateTime arrivalTime,
             int delay, double cargoWeight) {

@@ -1,4 +1,4 @@
-package aviation;
+package com.aviation.flight_app;
 
 public interface Delayable {
     public void reportDelay(int minutes);
