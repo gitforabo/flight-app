@@ -19,6 +19,9 @@ public class PassengerFlight extends Flight {
                     super(flightNumber, departureСity, arrivalCity, arrivalTime, delay);
                     this.passengerCount = passengerCount;
     }
+
+    public int getPassengerCount() { return passengerCount; }
+    public void setPassengerCount(int passengerCount) { this.passengerCount = passengerCount; }
     
     @Override
     public double calculatePriority() {

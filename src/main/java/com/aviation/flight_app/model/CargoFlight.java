@@ -21,4 +21,7 @@ public class CargoFlight extends Flight {
     public double calculatePriority() {
         return getDelay() + (cargoWeight / 100);
     }
+
+    public double getCargoWeight() { return cargoWeight; }
+    public void setCargoWeight(double cargoWeight) { this.cargoWeight = cargoWeight; }
 }

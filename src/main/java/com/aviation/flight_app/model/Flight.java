@@ -65,6 +65,8 @@ public abstract class Flight {
     public String getArrivalCity() { return arrivalCity; }
     public int getDelay() { return delay; }
     public void setDelay(int delay) { this.delay = delay; }
+    public String getDepartureCity() { return departureCity; }
+    public LocalDateTime getArrivalTime() { return arrivalTime; }
 
     @Override
     public boolean equals(Object o) {
