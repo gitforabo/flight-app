@@ -1,0 +1,6 @@
+2023-10-25T10:30;SU-100;Moscow;Berlin;20
+2023-10-25T12:00;BA-200;London;Paris;
+2023-10-25T16:45;CF-400;Frankfurt;New York;140
+2023-10-25T14:15;CF-300;Paris;Rome;invalid_delay
+2023-10-25T10:30;SU-100;Moscow;Berlin;200
+2023-10-25T16:45;CF-400;Frankfurt;New York;45
