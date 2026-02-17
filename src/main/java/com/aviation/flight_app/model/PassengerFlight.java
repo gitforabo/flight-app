@@ -15,8 +15,8 @@ public class PassengerFlight extends Flight {
     public PassengerFlight() {}
 
     public PassengerFlight(String flightNumber, Airport departureAirport, String arrivalCity, LocalDateTime arrivalTime,
-            int delay, int passengerCount) {
-                    super(flightNumber, departureAirport, arrivalCity, arrivalTime, delay);
+            int delay, int passengerCount, Pilot pilot) {
+                    super(flightNumber, departureAirport, arrivalCity, arrivalTime, delay, pilot);
                     this.passengerCount = passengerCount;
     }
 

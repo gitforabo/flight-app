@@ -46,7 +46,7 @@ public abstract class Flight {
     private String flightNumber;
 
     @ManyToOne 
-    @JoinColumn(name = "departure_airport_id") 
+    @JoinColumn(name = "departure_airport_id")  // В таблице flights появится колонка departure_airport_id
     @NotNull(message = "Аэропорт вылета должен быть указан")
     private Airport departureAirport;
 
@@ -59,14 +59,19 @@ public abstract class Flight {
     @Min(value = 0, message = "Задержка не может быть отрицательной") 
     private int delay;
 
+    @ManyToOne
+    @JoinColumn(name = "pilot_id") // В таблице flights появится колонка pilot_id
+    private Pilot pilot;
+
     protected Flight() {} // Пустой конструктор ОБЯЗАТЕЛЕН для Hibernate
 
-    public Flight(String flightNumber, Airport departureAirport, String arrivalCity, LocalDateTime arrivalTime, int delay) {
+    public Flight(String flightNumber, Airport departureAirport, String arrivalCity, LocalDateTime arrivalTime, int delay, Pilot pilot) {
         this.flightNumber = flightNumber;
         this.departureAirport = departureAirport; 
         this.arrivalCity = arrivalCity;
         this.arrivalTime = arrivalTime;
         this.delay = delay;
+        this.pilot = pilot;
     }
 
     public abstract double calculatePriority();
@@ -80,7 +85,7 @@ public abstract class Flight {
     public LocalDateTime getArrivalTime() { return arrivalTime; }
 
     public Airport getDepartureAirport() { return departureAirport; }
-    
+    public Pilot getPilot() { return pilot; }
     public String getDepartureCityName() {
         return departureAirport != null ? departureAirport.getCity() : null;
     }

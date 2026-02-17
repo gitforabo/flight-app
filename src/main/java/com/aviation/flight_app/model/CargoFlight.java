@@ -13,8 +13,8 @@ public class CargoFlight extends Flight {
     public CargoFlight() {}
 
     public CargoFlight(String flightNumber, Airport departureAirport, String arrivalCity, LocalDateTime arrivalTime,
-            int delay, double cargoWeight) {
-        super(flightNumber, departureAirport, arrivalCity, arrivalTime, delay);
+            int delay, double cargoWeight, Pilot pilot) {
+        super(flightNumber, departureAirport, arrivalCity, arrivalTime, delay, pilot);
         this.cargoWeight = cargoWeight;
     }
 

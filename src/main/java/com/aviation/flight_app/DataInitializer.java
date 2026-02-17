@@ -8,19 +8,23 @@ import org.springframework.stereotype.Component;
 import com.aviation.flight_app.model.Airport;
 import com.aviation.flight_app.model.CargoFlight;
 import com.aviation.flight_app.model.PassengerFlight;
+import com.aviation.flight_app.model.Pilot;
 import com.aviation.flight_app.repository.AirportRepository;
 import com.aviation.flight_app.repository.FlightRepository;
+import com.aviation.flight_app.repository.PilotRepository;
 
-@Component // Не забудь раскомментировать, чтобы Spring запустил этот класс
+@Component 
 public class DataInitializer implements CommandLineRunner {
 
     private final FlightRepository flightRepository;
-    private final AirportRepository airportRepository; // Добавляем новый репозиторий
+    private final AirportRepository airportRepository;
+    private final PilotRepository pilotRepository;
 
-    // Внедряем оба репозитория через конструктор
-    public DataInitializer(FlightRepository flightRepository, AirportRepository airportRepository) {
+    // Внедряем этих репозитория через конструктор
+    public DataInitializer(FlightRepository flightRepository, AirportRepository airportRepository, PilotRepository pilotRepository) {
         this.flightRepository = flightRepository;
         this.airportRepository = airportRepository;
+        this.pilotRepository = pilotRepository;
     }
 
     @Override
@@ -46,6 +50,12 @@ public class DataInitializer implements CommandLineRunner {
         nyc.setCity("New York");
         airportRepository.save(nyc);
 
+        Pilot pilot2 = new Pilot("Kasym-Jomart Tokaev", 5);
+        Pilot pilot1 = new Pilot("Nursultan Nazarbayev", 30);
+        pilotRepository.save(pilot1);
+        pilotRepository.save(pilot2);
+
+
         // 2. Создаем пассажирский рейс (привязываем объект almaty)
         PassengerFlight p1 = new PassengerFlight(
             "KC-901", 
@@ -53,7 +63,8 @@ public class DataInitializer implements CommandLineRunner {
             "Astana", 
             LocalDateTime.now().plusHours(2), 
             0, 
-            150
+            150,
+            pilot1
         );
 
         // 3. Создаем грузовой рейс (привязываем объект nyc)
@@ -63,7 +74,8 @@ public class DataInitializer implements CommandLineRunner {
             "London", 
             LocalDateTime.now().plusHours(5), 
             15, 
-            25.5
+            25.5,
+            pilot2
         );
 
         PassengerFlight p2 = new PassengerFlight(
@@ -72,7 +84,8 @@ public class DataInitializer implements CommandLineRunner {
             "Shymkent", 
             LocalDateTime.now().plusHours(3), 
             90, 
-            250
+            250,
+            pilot1
         );
 
         // 4. Сохраняем рейсы в PostgreSQL
