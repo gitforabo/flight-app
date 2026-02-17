@@ -14,9 +14,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-@Entity // Говорим Spring, что это сущность БД
+@Entity // сущность БД. Один репозиторий (FlightRepository) = Одна независимая сущность (Entity).
 @Table(name = "flights") // Имя таблицы
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // Все наследники в одной таблице
 @DiscriminatorColumn(name = "flight_type") // Колонка для различения типов
@@ -33,25 +38,32 @@ import jakarta.persistence.Table;
 public abstract class Flight {
 
     @Id // Первичный ключ
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Автоинкремент (1, 2, 3...)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Автоинкремент (1, 2, 3...) создаеться в БД
     private Long id;
 
     @Column(name = "flight_number", nullable = false)
+    @NotBlank(message = "Номер рейса не может быть пустым") // Валидация, не пропускает пустых
     private String flightNumber;
 
-    private String departureCity;
+    @ManyToOne 
+    @JoinColumn(name = "departure_airport_id") 
+    @NotNull(message = "Аэропорт вылета должен быть указан")
+    private Airport departureAirport;
+
+    @NotBlank(message = "Город прибытия обязателен") 
     private String arrivalCity;
+    
+    @NotNull(message = "Время прибытия обязательно")
     private LocalDateTime arrivalTime;
     
-    // В БД задержку будем менять через транзакции
+    @Min(value = 0, message = "Задержка не может быть отрицательной") 
     private int delay;
 
-    // Пустой конструктор ОБЯЗАТЕЛЕН для Hibernate
-    protected Flight() {}
+    protected Flight() {} // Пустой конструктор ОБЯЗАТЕЛЕН для Hibernate
 
-    public Flight(String flightNumber, String departureCity, String arrivalCity, LocalDateTime arrivalTime, int delay) {
+    public Flight(String flightNumber, Airport departureAirport, String arrivalCity, LocalDateTime arrivalTime, int delay) {
         this.flightNumber = flightNumber;
-        this.departureCity = departureCity;
+        this.departureAirport = departureAirport; 
         this.arrivalCity = arrivalCity;
         this.arrivalTime = arrivalTime;
         this.delay = delay;
@@ -65,8 +77,13 @@ public abstract class Flight {
     public String getArrivalCity() { return arrivalCity; }
     public int getDelay() { return delay; }
     public void setDelay(int delay) { this.delay = delay; }
-    public String getDepartureCity() { return departureCity; }
     public LocalDateTime getArrivalTime() { return arrivalTime; }
+
+    public Airport getDepartureAirport() { return departureAirport; }
+    
+    public String getDepartureCityName() {
+        return departureAirport != null ? departureAirport.getCity() : null;
+    }
 
     @Override
     public boolean equals(Object o) {

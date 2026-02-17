@@ -2,12 +2,8 @@ spring:
   application:
     name: FlightAviationApp
     
-  datasource:
-    url: jdbc:postgresql://localhost:5432/JavaLearn
-    username: postgres
-    password: rootroot 
-    driver-class-name: org.postgresql.Driver
-
+  profiles:
+    active: local  # Spring будеть искать файл application-local.yaml
   jpa:
     hibernate:
       ddl-auto: update

@@ -12,9 +12,9 @@ public class CargoFlight extends Flight {
 
     public CargoFlight() {}
 
-    public CargoFlight(String flightNumber, String departureСity, String arrivalCity, LocalDateTime arrivalTime,
+    public CargoFlight(String flightNumber, Airport departureAirport, String arrivalCity, LocalDateTime arrivalTime,
             int delay, double cargoWeight) {
-        super(flightNumber, departureСity, arrivalCity, arrivalTime, delay);
+        super(flightNumber, departureAirport, arrivalCity, arrivalTime, delay);
         this.cargoWeight = cargoWeight;
     }
 

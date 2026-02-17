@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.aviation.flight_app.model.Flight;
 
-@Repository
+@Repository // Один репозиторий = Одна независимая сущность (Entity).
 public interface FlightRepository extends JpaRepository<Flight, Long> {
     
     // Spring сам создаст SQL запрос: SELECT * FROM flights WHERE arrival_city = ?
