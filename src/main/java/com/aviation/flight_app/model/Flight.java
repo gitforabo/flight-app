@@ -84,6 +84,7 @@ public abstract class Flight {
     public void setDelay(int delay) { this.delay = delay; }
     public LocalDateTime getArrivalTime() { return arrivalTime; }
 
+    public void setFlightNumber(String flightNumber) { this.flightNumber = flightNumber; }
     public Airport getDepartureAirport() { return departureAirport; }
     public Pilot getPilot() { return pilot; }
     public String getDepartureCityName() {

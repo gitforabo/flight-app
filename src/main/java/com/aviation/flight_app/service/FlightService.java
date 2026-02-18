@@ -57,4 +57,9 @@ public class FlightService {
     public List<Flight> getFlightsByCity(String city) {
         return flightRepository.findByArrivalCityIgnoreCase(city);
     }
+
+    public Flight getFlightById(Long id) {
+    return flightRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Рейс с ID " + id + " не найден"));
+    }
 }
