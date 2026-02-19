@@ -6,9 +6,10 @@ services:
     container_name: flight-db  # Фиксированное имя контейнера (удобно для логов)
     environment:
       # Данные берутся из .env
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: Aviation
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: rootroot
+
     ports:
       - "5433:5432" # Проброс портов: [Порт на Макбуке] : [Порт внутри контейнера]
     volumes:
@@ -24,9 +25,9 @@ services:
     environment:
       # ПЕРЕОПРЕДЕЛЯЕМ настройки Spring из application.yaml для работы ВНУТРИ Docker
       # 'db' здесь — это имя сервиса выше, Docker сам превратит его в IP-адрес
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${DB_NAME}
-      SPRING_DATASOURCE_USERNAME: ${DB_USER}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/Aviation
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: rootroot
       SPRING_JPA_HIBERNATE_DDL_AUTO: update # Авто-создание таблиц при старте
 
 volumes:

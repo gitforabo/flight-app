@@ -42,9 +42,9 @@ public class FlightController {
 
     // МЕТОД ДЛЯ УДАЛЕНИЯ
     @DeleteMapping("/{id}")
-    public Flight deleteFlight(@PathVariable Long id) {
+    public Flight deleteFlight(@PathVariable Long id) { // PathVariable получаеть {id} из запроса
         return flightService.deleteFlightAndReturn(id);
-    }  // Теперь метод вернет JSON удаленного объекта
+    }  // метод вернет JSON удаленного объекта
 
     // 1. Поиск по номеру рейса: /api/flights/number/KC-901
     @GetMapping("/number/{number}")
@@ -54,7 +54,7 @@ public class FlightController {
 
     // 2. Поиск по городу: /api/flights/search?city=Astana
     @GetMapping("/search")
-    public List<Flight> searchByCity(@RequestParam String city) {
+    public List<Flight> searchByCity(@RequestParam String city) { // ищет данные в query-строке (всё, что идет после знака ?)
         return flightService.getFlightsByCity(city);
     }
 }
